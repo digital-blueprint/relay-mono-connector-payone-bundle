@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Service;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponse;
 use Dbp\Relay\MonoBundle\PaymentServiceProvider\CompleteResponseInterface;

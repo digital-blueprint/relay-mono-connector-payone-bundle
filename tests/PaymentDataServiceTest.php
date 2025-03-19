@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Tests;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Checkout;
-use Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataService;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Checkout;
+use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -19,7 +19,7 @@ class PaymentDataServiceTest extends KernelTestCase
     public function setUp(): void
     {
         $container = $this->getContainer();
-        $this->em = $container->get('doctrine')->getManager('dbp_relay_mono_connector_payunity_bundle');
+        $this->em = $container->get('doctrine')->getManager('dbp_relay_mono_connector_payone_bundle');
         $this->em->clear();
         $metaData = $this->em->getMetadataFactory()->getAllMetadata();
         $schemaTool = new SchemaTool($this->em);

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Tests;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\ApiException;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Connection;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\PaymentType;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\PayUnityApi;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\ResultCode;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Tools;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ApiException;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Connection;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PaymentType;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PayUnityApi;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ResultCode;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Tools;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;

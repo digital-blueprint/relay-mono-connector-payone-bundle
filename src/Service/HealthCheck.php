@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Service;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 use Dbp\Relay\CoreBundle\HealthCheck\CheckInterface;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckOptions;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckResult;
-use Dbp\Relay\MonoConnectorPayunityBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 
 class HealthCheck implements CheckInterface
 {

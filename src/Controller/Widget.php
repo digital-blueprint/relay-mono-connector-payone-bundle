@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Controller;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Controller;
 
 use Dbp\Relay\CoreBundle\Locale\Locale;
 use Dbp\Relay\MonoBundle\Service\PaymentService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Service\Utils;
+use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Service\PayunityService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Service\Utils;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

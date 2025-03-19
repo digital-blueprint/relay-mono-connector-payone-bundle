@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Tests;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
 use ApiPlatform\Symfony\Bundle\ApiPlatformBundle;
 use Dbp\Relay\CoreBundle\DbpRelayCoreBundle;
 use Dbp\Relay\MonoBundle\DbpRelayMonoBundle;
-use Dbp\Relay\MonoConnectorPayunityBundle\DbpRelayMonoConnectorPayunityBundle;
+use Dbp\Relay\MonoConnectorPayoneBundle\DbpRelayMonoConnectorPayoneBundle;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
@@ -36,7 +36,7 @@ class Kernel extends BaseKernel
         yield new DoctrineMigrationsBundle();
         yield new ApiPlatformBundle();
         yield new DbpRelayMonoBundle();
-        yield new DbpRelayMonoConnectorPayunityBundle();
+        yield new DbpRelayMonoConnectorPayoneBundle();
         yield new DbpRelayCoreBundle();
     }
 
@@ -65,7 +65,7 @@ class Kernel extends BaseKernel
             ],
         ]);
 
-        $container->extension('dbp_relay_mono_connector_payunity', [
+        $container->extension('dbp_relay_mono_connector_payone', [
             'database_url' => 'sqlite:///:memory:',
             'payment_contracts' => [
                 'payunity_flex' => [

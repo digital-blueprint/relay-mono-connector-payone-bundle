@@ -1,6 +1,6 @@
 {
-    "name": "dbp/relay-mono-connector-payunity-bundle",
-    "description": "A PayUnity connector for the mono bundle for the Relay API gateway",
+    "name": "dbp/relay-mono-connector-payone-bundle",
+    "description": "A Payone connector for the mono bundle for the Relay API gateway",
     "type": "symfony-bundle",
     "license": "AGPL-3.0-or-later",
     "require": {
@@ -44,12 +44,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Dbp\\Relay\\MonoConnectorPayunityBundle\\": "src/"
+            "Dbp\\Relay\\MonoConnectorPayoneBundle\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Dbp\\Relay\\MonoConnectorPayunityBundle\\Tests\\": "tests/"
+            "Dbp\\Relay\\MonoConnectorPayoneBundle\\Tests\\": "tests/"
         }
     },
     "config": {

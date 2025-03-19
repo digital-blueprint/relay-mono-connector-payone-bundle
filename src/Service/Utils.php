@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Service;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 class Utils
 {

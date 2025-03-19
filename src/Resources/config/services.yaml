@@ -1,44 +1,44 @@
 services:
-  Dbp\Relay\MonoConnectorPayunityBundle\Webhook\Webhook:
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\Webhook:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Controller\Widget:
+  Dbp\Relay\MonoConnectorPayoneBundle\Controller\Widget:
     autowire: true
     autoconfigure: true
     calls:
       - setAuditLogger: [ '@monolog.logger.dbp_relay_mono_audit' ]
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Config\ConfigurationService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService:
     autowire: true
     autoconfigure: true
     arguments:
-      $em: '@doctrine.orm.dbp_relay_mono_connector_payunity_bundle_entity_manager'
+      $em: '@doctrine.orm.dbp_relay_mono_connector_payone_bundle_entity_manager'
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityFlexService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayunityFlexService:
     autowire: true
     autoconfigure: true
     public: true
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Webhook\PayunityWebhookService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\PayunityWebhookService:
     autowire: true
     autoconfigure: true
     calls:
       - setAuditLogger: [ '@monolog.logger.dbp_relay_mono_audit' ]
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Service\HealthCheck:
+  Dbp\Relay\MonoConnectorPayoneBundle\Service\HealthCheck:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Webhook\WebhookCommand:
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\WebhookCommand:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayunityBundle\Service\PayunityService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayunityService:
     autowire: true
     autoconfigure: true
     calls:

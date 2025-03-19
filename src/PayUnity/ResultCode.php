@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\PayUnity;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\PayUnity;
 
 /**
  * https://payunity.docs.oppwa.com/reference/resultCodes.

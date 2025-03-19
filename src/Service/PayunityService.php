@@ -2,24 +2,24 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Service;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 use Dbp\Relay\CoreBundle\Exception\ApiError;
 use Dbp\Relay\CoreBundle\Locale\Locale;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentStatus;
-use Dbp\Relay\MonoConnectorPayunityBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoConnectorPayunityBundle\Config\PaymentContract;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\ApiException;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Checkout;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Connection;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\PaymentData;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\PaymentType;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\PayUnityApi;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\ResultCode;
-use Dbp\Relay\MonoConnectorPayunityBundle\PayUnity\Tools;
-use Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataPersistence;
-use Dbp\Relay\MonoConnectorPayunityBundle\Persistence\PaymentDataService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Config\PaymentContract;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ApiException;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Checkout;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Connection;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PaymentData;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PaymentType;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PayUnityApi;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ResultCode;
+use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Tools;
+use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataPersistence;
+use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -252,7 +252,7 @@ class PayunityService implements LoggerAwareInterface
 
     public function getWidgetUrl(PaymentPersistence $payment): string
     {
-        $uri = $this->urlGenerator->generate('dbp_relay_mono_connector_payunity_bundle', [
+        $uri = $this->urlGenerator->generate('dbp_relay_mono_connector_payone_bundle', [
             'identifier' => $payment->getIdentifier(),
             'lang' => $this->locale->getCurrentPrimaryLanguage(),
         ], referenceType: UrlGeneratorInterface::ABSOLUTE_URL);

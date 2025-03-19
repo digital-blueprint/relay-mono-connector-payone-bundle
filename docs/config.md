@@ -2,11 +2,11 @@
 
 ## Bundle Configuration
 
-Created via `./bin/console config:dump-reference DbpRelayMonoConnectorPayunityBundle | sed '/^$/d'`
+Created via `./bin/console config:dump-reference DbpRelayMonoConnectorPayoneBundle | sed '/^$/d'`
 
 ```yaml
-# Default configuration for "DbpRelayMonoConnectorPayunityBundle"
-dbp_relay_mono_connector_payunity:
+# Default configuration for "DbpRelayMonoConnectorPayoneBundle"
+dbp_relay_mono_connector_payone:
   # The database DSN
   database_url:         '%env(resolve:DATABASE_URL)%' # Required
   # Zero or more payment contracts. The "payment_contract" can be referenced in the "mono" config.
@@ -37,14 +37,14 @@ dbp_relay_mono_connector_payunity:
 Example configuration:
 
 ```yaml
-dbp_relay_mono_connector_payunity:
+dbp_relay_mono_connector_payone:
   database_url: '%env(DATABASE_URL)%'
   payment_contracts:
     payunity_flex_studienservice:
-      api_url: '%env(MONO_CONNECTOR_PAYUNITY_API_URL)%'
-      entity_id: '%env(MONO_CONNECTOR_PAYUNITY_ENTITY_ID)%'
-      access_token: '%env(MONO_CONNECTOR_PAYUNITY_ACCESS_TOKEN)%'
-      webhook_secret: '%env(MONO_CONNECTOR_PAYUNITY_WEBHOOK_SECRET)%'
+      api_url: '%env(MONO_CONNECTOR_PAYONE_API_URL)%'
+      entity_id: '%env(MONO_CONNECTOR_PAYONE_ENTITY_ID)%'
+      access_token: '%env(MONO_CONNECTOR_PAYONE_ACCESS_TOKEN)%'
+      webhook_secret: '%env(MONO_CONNECTOR_PAYONE_WEBHOOK_SECRET)%'
       payment_methods:
         creditcard:
           brands: ['AMEX', 'DINERS', 'DISCOVER', 'JCB', 'MASTER', 'VISA']

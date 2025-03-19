@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Webhook;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Webhook;
 
-use Dbp\Relay\MonoConnectorPayunityBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -63,7 +63,7 @@ class WebhookCommand extends Command
             // Show the user the URL which they need to use for registering a webhook
             $contract = $this->config->getPaymentContractByIdentifier($contractId);
             $webhookUrl = $this->router->generate(
-                'dbp_relay_mono_connector_payunity_bundle_webhook',
+                'dbp_relay_mono_connector_payone_bundle_webhook',
                 ['contract' => $contract->getIdentifier()],
                 UrlGeneratorInterface::ABSOLUTE_URL);
             $output->writeln("Webhook URL for PayUnity:\n\n".$webhookUrl);

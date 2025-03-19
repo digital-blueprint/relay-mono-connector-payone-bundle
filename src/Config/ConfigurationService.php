@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Config;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Config;
 
-use Dbp\Relay\MonoConnectorPayunityBundle\Controller\Widget;
+use Dbp\Relay\MonoConnectorPayoneBundle\Controller\Widget;
 
 class ConfigurationService
 {

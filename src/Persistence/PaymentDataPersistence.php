@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Persistence;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Persistence;
 
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Table(name: 'mono_connector_payunity_payments')]
+#[ORM\Table(name: 'mono_connector_payone_payments')]
 #[ORM\Index(name: 'payment_identifier_idx', fields: ['paymentIdentifier'])]
 #[ORM\Index(name: 'psp_identifier_idx', fields: ['pspIdentifier'])]
 #[ORM\Entity]

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\PayUnity;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\PayUnity;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;

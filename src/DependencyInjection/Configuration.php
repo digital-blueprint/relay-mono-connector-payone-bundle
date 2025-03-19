@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\DependencyInjection;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -11,7 +11,7 @@ class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $treeBuilder = new TreeBuilder('dbp_relay_mono_connector_payunity');
+        $treeBuilder = new TreeBuilder('dbp_relay_mono_connector_payone');
 
         $treeBuilder
             ->getRootNode()

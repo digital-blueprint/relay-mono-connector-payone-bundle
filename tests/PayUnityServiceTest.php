@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Tests;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
-use Dbp\Relay\MonoConnectorPayunityBundle\Service\Utils;
+use Dbp\Relay\MonoConnectorPayoneBundle\Service\Utils;
 use PHPUnit\Framework\TestCase;
 
 class PayUnityServiceTest extends TestCase

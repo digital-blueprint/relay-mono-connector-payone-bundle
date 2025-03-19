@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Migrations;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 
 abstract class EntityManagerMigration extends AbstractMigration implements ContainerAwareInterface
 {
-    private const EM_NAME = 'dbp_relay_mono_connector_payunity_bundle';
+    private const EM_NAME = 'dbp_relay_mono_connector_payone_bundle';
 
     /** @var ContainerInterface */
     protected $container;

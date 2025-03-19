@@ -1,20 +1,20 @@
-# Mono PayUnity Connector
+# Mono Payone Connector
 
-Source: https://github.com/digital-blueprint/relay-mono-connector-payunity-bundle
+Source: https://github.com/digital-blueprint/relay-mono-connector-payone-bundle
 
 ```mermaid
 flowchart LR
     subgraph Relay API Gateway
         mono_bundle["Mono Bundle"]
-        mono_payunity_bundle["PayUnity Connector"]
+        mono_payone_bundle["Payone Connector"]
     end
 
     subgraph PayUnity
         payunity_api["PayUnity API"]
     end
 
-    mono_bundle --> mono_payunity_bundle
-    mono_payunity_bundle <--> payunity_api
+    mono_bundle --> mono_payone_bundle
+    mono_payone_bundle <--> payunity_api
 ```
 
 The PayUnity Connector connects mono with [PayUnity](https://www.payunity.com/).
@@ -23,10 +23,10 @@ different payment methods.
 
 ## Bundle installation
 
-You can install the bundle directly from [packagist.org](https://packagist.org/packages/dbp/relay-mono-connector-payunity-bundle).
+You can install the bundle directly from [packagist.org](https://packagist.org/packages/dbp/relay-mono-connector-payone-bundle).
 
 ```bash
-composer require dbp/relay-mono-connector-payunity-bundle
+composer require dbp/relay-mono-connector-payone-bundle
 ```
 
 ## Installation Requirements

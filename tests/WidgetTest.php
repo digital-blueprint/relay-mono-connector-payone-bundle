@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayunityBundle\Tests;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
-use Dbp\Relay\MonoConnectorPayunityBundle\Controller\Widget;
+use Dbp\Relay\MonoConnectorPayoneBundle\Controller\Widget;
 use PHPUnit\Framework\TestCase;
 
 class WidgetTest extends TestCase
