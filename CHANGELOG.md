@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1
+
+* Drop support for PHP 8.1
+* Remove dependency on api-platform
+
 ## v0.2.0
 
 * Various breaking bundle config simplifications:
