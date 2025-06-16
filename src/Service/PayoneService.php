@@ -5,20 +5,17 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 use Dbp\Relay\CoreBundle\Exception\ApiError;
-use Dbp\Relay\CoreBundle\Locale\Locale;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentStatus;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\PaymentContract;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ApiException;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Checkout;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Connection;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PaymentData;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PaymentType;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\PayUnityApi;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\ResultCode;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Tools;
-use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataPersistence;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\ApiException;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Checkout;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Connection;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\PaymentData;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\PayoneApi;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\ResultStatusCode;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Tools;
 use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
@@ -27,10 +24,8 @@ use Psr\Log\NullLogger;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Lock\LockInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Uid\Uuid;
 
-class PayunityService implements LoggerAwareInterface
+class PayoneService implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
@@ -45,11 +40,6 @@ class PayunityService implements LoggerAwareInterface
     private $paymentDataService;
 
     /**
-     * @var Locale
-     */
-    private $locale;
-
-    /**
      * @var LockFactory
      */
     private $lockFactory;
@@ -62,22 +52,17 @@ class PayunityService implements LoggerAwareInterface
      * @var ConfigurationService
      */
     private $configService;
-    private UrlGeneratorInterface $urlGenerator;
 
     public function __construct(
         PaymentDataService $paymentDataService,
-        Locale $locale,
         LockFactory $lockFactory,
         ConfigurationService $configService,
-        UrlGeneratorInterface $urlGenerator,
     ) {
         $this->paymentDataService = $paymentDataService;
-        $this->locale = $locale;
         $this->lockFactory = $lockFactory;
         $this->logger = new NullLogger();
         $this->auditLogger = new NullLogger();
         $this->configService = $configService;
-        $this->urlGenerator = $urlGenerator;
     }
 
     public function setAuditLogger(LoggerInterface $auditLogger): void
@@ -88,7 +73,7 @@ class PayunityService implements LoggerAwareInterface
     private function createPaymentLock(PaymentPersistence $payment): LockInterface
     {
         $resourceKey = sprintf(
-            'mono-connector-payunity-%s',
+            'mono-connector-payone-%s',
             $payment->getIdentifier()
         );
 
@@ -106,11 +91,11 @@ class PayunityService implements LoggerAwareInterface
     public function getPaymentIdForPspData(string $pspData): ?string
     {
         // First check if the PSP data is for us, null means we don't handle it
-        if (!Utils::isPayunityPspData($pspData)) {
+        if (!Utils::isPspData($pspData)) {
             return null;
         }
 
-        // Then extract the checkoudID
+        // Then extract the checkoutId
         $checkoutId = Utils::extractCheckoutIdFromPspData($pspData);
         if ($checkoutId === false) {
             throw new ApiError(Response::HTTP_BAD_REQUEST, 'Invalid PSP data');
@@ -127,17 +112,7 @@ class PayunityService implements LoggerAwareInterface
 
     public function checkConnection(string $contract): void
     {
-        $api = $this->getApiByContract($contract, null);
-        try {
-            $api->queryMerchant(Uuid::v4()->toRfc4122());
-        } catch (ApiException $e) {
-            // [700.400.580] cannot find transaction
-            // which is expected. Every other error means we couldn't connect/auth somehow.
-            if ($e->result->getCode() === '700.400.580') {
-                return;
-            }
-            throw $e;
-        }
+        // todo
     }
 
     /**
@@ -148,20 +123,21 @@ class PayunityService implements LoggerAwareInterface
         return ['relay-mono-payment-id' => $payment->getIdentifier()];
     }
 
-    public function getApiByContract(string $contractId, ?PaymentPersistence $payment): PayUnityApi
+    public function getApiByContract(string $contractId, ?PaymentPersistence $payment): PayoneApi
     {
         if (!array_key_exists($contractId, $this->connection)) {
             $contract = $this->getPaymentContractByIdentifier($contractId);
             $this->connection[$contractId] = new Connection(
                 $contract->getApiUrl(),
-                $contract->getEntityId(),
-                $contract->getAccessToken()
+                $contract->getMerchantId(),
+                $contract->getApiKey(),
+                $contract->getApiSecret(),
             );
         }
 
         $connection = $this->connection[$contractId];
         $connection->setLogger($this->logger);
-        $api = new PayUnityApi($connection);
+        $api = new PayoneApi($connection);
         $api->setLogger($this->logger);
         $api->setAuditLogger($this->auditLogger);
         if ($payment !== null) {
@@ -171,28 +147,22 @@ class PayunityService implements LoggerAwareInterface
         return $api;
     }
 
-    public function getPaymentScriptSrc(PaymentPersistence $payment, PaymentDataPersistence $paymentData): string
-    {
-        $api = $this->getApiByContract($paymentData->getPspContract(), $payment);
-
-        return $api->getPaymentScriptSrc($paymentData->getPspIdentifier());
-    }
-
     /**
+     * @param array<string,mixed>  $restrictToProducts
      * @param array<string,string> $extra
      */
-    public function prepareCheckout(PaymentPersistence $payment, string $pspContract, string $pspMethod, string $amount, string $currency, string $paymentType, array $extra = []): Checkout
+    public function prepareCheckout(PaymentPersistence $payment, string $pspContract, string $pspMethod, int $amount, string $currency, array $restrictToProducts, array $extra = []): Checkout
     {
         $existingPaymentData = $this->paymentDataService->getByPaymentIdentifier($payment->getIdentifier());
         if ($existingPaymentData !== null) {
-            $this->auditLogger->error('payunity: Can\'t create a new checkout, there already exists one', $this->getLoggingContext($payment));
+            $this->auditLogger->error('payone: Can\'t create a new checkout, there already exists one', $this->getLoggingContext($payment));
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Checkout can\'t be created');
         }
 
         $api = $this->getApiByContract($pspContract, $payment);
 
         try {
-            $checkout = $api->prepareCheckout($amount, $currency, $paymentType, $extra);
+            $checkout = $api->prepareCheckout($payment, $amount, $currency, $restrictToProducts, $extra);
         } catch (ApiException $e) {
             $this->logger->error('Communication error with payment service provider!', ['exception' => $e]);
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Communication error with payment service provider!');
@@ -218,60 +188,42 @@ class PayunityService implements LoggerAwareInterface
         return $contract;
     }
 
-    public function startPayment(string $pspContract, string $pspMethod, PaymentPersistence $payment): void
+    public function startPayment(string $pspContract, string $pspMethod, PaymentPersistence $payment): string
     {
         $contract = $this->getPaymentContractByIdentifier($pspContract);
         $amount = Tools::floatToAmount((float) $payment->getAmount());
         $currency = $payment->getCurrency();
-        $paymentType = PaymentType::DEBIT;
         $extra = [];
-        $testMode = $contract->getTestMode();
-        if ($testMode === PaymentContract::TEST_MODE_INTERNAL) {
-            $extra['testMode'] = 'INTERNAL';
-        } elseif ($testMode === PaymentContract::TEST_MODE_EXTERNAL) {
-            $extra['testMode'] = 'EXTERNAL';
-        }
+        $paymentMethods = $contract->getPaymentMethod($pspMethod);
+        $restrictToProducts = $paymentMethods->getProducts();
 
-        // This allows us to (manually) connect our payment entry with the transaction in the payunity web interface
+        // This allows us to (manually) connect our payment entry with the transaction in the payone web interface
         // even if the payment gets canceled or never finished.
         $extra['merchantTransactionId'] = $payment->getIdentifier();
 
         $lock = $this->createPaymentLock($payment);
         $lock->acquire(true);
         try {
-            $checkoutData = $this->prepareCheckout($payment, $pspContract, $pspMethod, $amount, $currency, $paymentType, $extra);
-            // Set the status based on the initial response, it's usually "pending"
-            $this->setPaymentStatusForResult($payment, $checkoutData->getResult());
+            $checkoutData = $this->prepareCheckout($payment, $pspContract, $pspMethod, $amount, $currency, $restrictToProducts, $extra);
         } finally {
             $lock->release();
         }
 
-        // We don't get a webhook response right away, so poll the payment status again, just for good measure
-        $this->updatePaymentStatus($pspContract, $payment);
+        return $checkoutData->getRedirectUrl();
     }
 
-    public function getWidgetUrl(PaymentPersistence $payment): string
-    {
-        $uri = $this->urlGenerator->generate('dbp_relay_mono_connector_payone_bundle', [
-            'identifier' => $payment->getIdentifier(),
-            'lang' => $this->locale->getCurrentPrimaryLanguage(),
-        ], referenceType: UrlGeneratorInterface::ABSOLUTE_URL);
-
-        return $uri;
-    }
-
-    public function setPaymentStatusForResult(PaymentPersistence $payment, ResultCode $result): void
+    public function setPaymentStatusForResult(PaymentPersistence $payment, ResultStatusCode $result): void
     {
         if ($result->isSuccessfullyProcessed() || $result->isSuccessfullyProcessedNeedsManualReview()) {
-            $this->auditLogger->debug('payunity: Setting payment to complete', $this->getLoggingContext($payment));
+            $this->auditLogger->debug('payone: Setting payment to complete', $this->getLoggingContext($payment));
             $payment->setPaymentStatus(PaymentStatus::COMPLETED);
             $now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
             $payment->setCompletedAt($now);
         } elseif ($result->isPending() || $result->isPendingExtra()) {
-            $this->auditLogger->debug('payunity: Setting payment to pending', $this->getLoggingContext($payment));
+            $this->auditLogger->debug('payone: Setting payment to pending', $this->getLoggingContext($payment));
             $payment->setPaymentStatus(PaymentStatus::PENDING);
         } else {
-            $this->auditLogger->debug('payunity: Setting payment to failed', $this->getLoggingContext($payment));
+            $this->auditLogger->debug('payone: Setting payment to failed', $this->getLoggingContext($payment));
             $payment->setPaymentStatus(PaymentStatus::FAILED);
         }
     }
@@ -281,22 +233,31 @@ class PayunityService implements LoggerAwareInterface
         $lock = $this->createPaymentLock($payment);
         $lock->acquire(true);
 
-        $this->auditLogger->debug('payunity: Checking if payment is completed', $this->getLoggingContext($payment));
+        $this->auditLogger->debug('payone: Checking if payment is completed', $this->getLoggingContext($payment));
 
         try {
-            $paymentDataPersisted = $this->paymentDataService->getByPaymentIdentifier($payment->getIdentifier());
-            if ($paymentDataPersisted === null) {
+            $paymentDataPersistence = $this->paymentDataService->getByPaymentIdentifier($payment->getIdentifier());
+            if ($paymentDataPersistence === null) {
                 throw ApiError::withDetails(Response::HTTP_NOT_FOUND, 'Payment data was not found!', 'mono:payment-data-not-found');
             }
 
             if ($payment->getPaymentStatus() === PaymentStatus::COMPLETED) {
-                $this->auditLogger->debug('payunity: payment already completed, nothing to do', $this->getLoggingContext($payment));
+                $this->auditLogger->debug('payone: payment already completed, nothing to do', $this->getLoggingContext($payment));
             } else {
-                $pspIdentifier = $paymentDataPersisted->getPspIdentifier();
-                $this->auditLogger->debug('payunity: Found existing checkout: '.$pspIdentifier, $this->getLoggingContext($payment));
+                $pspIdentifier = $paymentDataPersistence->getPspIdentifier();
+                $this->auditLogger->debug('payone: Found existing checkout: '.$pspIdentifier, $this->getLoggingContext($payment));
                 $paymentData = $this->getCheckoutPaymentData($payment, $pspContract, $pspIdentifier);
 
-                // https://payunity.docs.oppwa.com/reference/resultCodes
+                // capture should not be necessary because of authorization mode set to 'SALE' during payment initalization
+                if ($paymentData->getResult()->isCapturable()) {
+                    $this->auditLogger->debug('payone: payment is capturable', $this->getLoggingContext($payment));
+                    $api = $this->getApiByContract($pspContract, $payment);
+                    $paymentId = $paymentData->getId();
+                    $amount = Tools::floatToAmount((float) $payment->getAmount());
+                    $api->capturePayment($paymentId, $amount);
+                    $paymentData = $this->getCheckoutPaymentData($payment, $pspContract, $pspIdentifier);
+                }
+
                 $result = $paymentData->getResult();
                 $this->setPaymentStatusForResult($payment, $result);
             }
@@ -310,7 +271,7 @@ class PayunityService implements LoggerAwareInterface
      */
     public function cleanupPaymentData(PaymentPersistence $payment): void
     {
-        $this->auditLogger->debug('payunity: clean up payment data', $this->getLoggingContext($payment));
+        $this->auditLogger->debug('payone: clean up payment data', $this->getLoggingContext($payment));
         $this->paymentDataService->cleanupByPaymentIdentifier($payment->getIdentifier());
     }
 

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayoneBundle\PayUnity;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Payone;
 
 class PaymentList
 {
     /**
-     * @var ResultCode
+     * @var ResultStatusCode
      */
     private $result;
 
@@ -30,7 +30,7 @@ class PaymentList
     public function fromJsonResponse(array $jsonResponse): void
     {
         $res = $jsonResponse['result'];
-        $this->result = new ResultCode($res['code'], $res['description']);
+        $this->result = new ResultStatusCode($res['code'], $res['description']);
 
         $payments = [];
         foreach ($jsonResponse['payments'] as $item) {
@@ -42,7 +42,7 @@ class PaymentList
         $this->payments = $payments;
     }
 
-    public function getResult(): ResultCode
+    public function getResult(): ResultStatusCode
     {
         return $this->result;
     }

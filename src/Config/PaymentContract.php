@@ -6,9 +6,6 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Config;
 
 class PaymentContract
 {
-    public const TEST_MODE_INTERNAL = 'internal';
-    public const TEST_MODE_EXTERNAL = 'external';
-
     /**
      * @var string
      */
@@ -22,22 +19,27 @@ class PaymentContract
     /**
      * @var string
      */
-    private $entityId;
+    private $merchantId;
 
     /**
      * @var string
      */
-    private $accessToken;
+    private $apiKey;
+
+    /**
+     * @var string
+     */
+    private $apiSecret;
+
+    /**
+     * @var ?string
+     */
+    private $webhookId;
 
     /**
      * @var ?string
      */
     private $webhookSecret;
-
-    /**
-     * @var ?string
-     */
-    private $testMode;
 
     /**
      * @var array<string,PaymentMethod>
@@ -64,29 +66,44 @@ class PaymentContract
         $this->apiUrl = $apiUrl;
     }
 
-    public function getEntityId(): string
+    public function getMerchantId(): string
     {
-        return $this->entityId;
+        return $this->merchantId;
     }
 
-    public function setEntityId(string $entityId): void
+    public function setMerchantId(string $merchantId): void
     {
-        $this->entityId = $entityId;
+        $this->merchantId = $merchantId;
     }
 
-    public function getAccessToken(): string
+    public function getApiKey(): string
     {
-        return $this->accessToken;
+        return $this->apiKey;
     }
 
-    public function setAccessToken(string $accessToken): void
+    public function setApiKey(string $apiKey): void
     {
-        $this->accessToken = $accessToken;
+        $this->apiKey = $apiKey;
     }
 
-    public function getWebhookSecret(): ?string
+    public function getApiSecret(): string
     {
-        return $this->webhookSecret;
+        return $this->apiSecret;
+    }
+
+    public function setApiSecret(string $apiSecret): void
+    {
+        $this->apiSecret = $apiSecret;
+    }
+
+    public function setWebhookId(?string $webhookId): void
+    {
+        $this->webhookId = $webhookId;
+    }
+
+    public function getWebhookId(): ?string
+    {
+        return $this->webhookId;
     }
 
     public function setWebhookSecret(?string $webhookSecret): void
@@ -94,14 +111,9 @@ class PaymentContract
         $this->webhookSecret = $webhookSecret;
     }
 
-    public function getTestMode(): ?string
+    public function getWebhookSecret(): ?string
     {
-        return $this->testMode;
-    }
-
-    public function setTestMode(?string $testMode): void
-    {
-        $this->testMode = $testMode;
+        return $this->webhookSecret;
     }
 
     /**
@@ -133,15 +145,16 @@ class PaymentContract
         $paymentContract = new PaymentContract();
         $paymentContract->setIdentifier($identifier);
         $paymentContract->setApiUrl($config['api_url']);
-        $paymentContract->setEntityId($config['entity_id']);
-        $paymentContract->setAccessToken($config['access_token']);
+        $paymentContract->setMerchantId($config['merchant_id']);
+        $paymentContract->setApiKey($config['api_key']);
+        $paymentContract->setApiSecret($config['api_secret']);
+        $paymentContract->setWebhookId($config['webhook_id']);
         $paymentContract->setWebhookSecret($config['webhook_secret']);
-        $paymentContract->setTestMode($config['test_mode']);
         $paymentMethods = [];
         foreach ($config['payment_methods'] as $id => $paymentMethodConfig) {
             $paymentMethod = new PaymentMethod();
             $paymentMethod->setIdentifier($id);
-            $paymentMethod->setBrands($paymentMethodConfig['brands']);
+            $paymentMethod->setProducts($paymentMethodConfig['products']);
             $paymentMethods[$id] = $paymentMethod;
         }
         $paymentContract->setPaymentMethods($paymentMethods);

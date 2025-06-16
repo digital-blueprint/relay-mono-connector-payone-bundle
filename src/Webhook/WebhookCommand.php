@@ -22,21 +22,15 @@ class WebhookCommand extends Command
      * @var RouterInterface
      */
     private $router;
-    /**
-     * @var PayunityWebhookService
-     */
-    private $webhook;
 
     public function __construct(
         ConfigurationService $config,
         RouterInterface $router,
-        PayunityWebhookService $webhook
     ) {
         parent::__construct();
 
         $this->config = $config;
         $this->router = $router;
-        $this->webhook = $webhook;
     }
 
     /**
@@ -44,8 +38,8 @@ class WebhookCommand extends Command
      */
     protected function configure()
     {
-        $this->setName('dbp:relay:mono-connector-payunity:webhook-info');
-        $this->setAliases(['dbp:relay-mono-connector-payunity:webhook-info']);
+        $this->setName('dbp:relay:mono-connector-payone:webhook-info');
+        $this->setAliases(['dbp:relay-mono-connector-payone:webhook-info']);
         $this
             ->setDescription('Webhook info command')
             ->addArgument('contract-id', InputArgument::OPTIONAL, 'The contract ID');
@@ -66,32 +60,12 @@ class WebhookCommand extends Command
                 'dbp_relay_mono_connector_payone_bundle_webhook',
                 ['contract' => $contract->getIdentifier()],
                 UrlGeneratorInterface::ABSOLUTE_URL);
-            $output->writeln("Webhook URL for PayUnity:\n\n".$webhookUrl);
+            $output->writeln("Webhook URL for payone:\n\n".$webhookUrl);
 
-            if ($contract->getWebhookSecret() === null) {
+            if ($contract->getWebhookId() === null || $contract->getWebhookSecret() === null) {
                 // No secret set, we can't fake a test call
                 return Command::SUCCESS;
             }
-
-            // To allow users to test their setup, give them a curl command faking a webhook test call
-            $output->writeln('');
-
-            $jsonPayload = '{"type": "test", "action": "webhook activation", "payload": {}}';
-            $request = $this->webhook->createRequest($contract, $jsonPayload);
-
-            $curl = [
-                'curl',
-                '-X', 'POST',
-                '-i', '--fail',
-                '-H', escapeshellarg('Content-Type: text/plain'),
-                '-H', escapeshellarg('X-Initialization-Vector: '.$request->headers->get('X-Initialization-Vector')),
-                '-H', escapeshellarg('X-Authentication-Tag: '.$request->headers->get('X-Authentication-Tag')),
-                '-d', escapeshellarg($request->getContent()),
-                escapeshellarg($webhookUrl),
-            ];
-
-            $output->writeln("CURL test command:\n");
-            $output->writeln(implode(' ', $curl));
         }
 
         return Command::SUCCESS;

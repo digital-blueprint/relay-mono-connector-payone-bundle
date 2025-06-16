@@ -13,24 +13,23 @@ use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 
-class PayunityFlexService implements PaymentServiceProviderServiceInterface, LoggerAwareInterface
+class PayoneHostedCheckoutPageService implements PaymentServiceProviderServiceInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
     /**
-     * @var PayunityService
+     * @var PayoneService
      */
-    private $payunity;
+    private $payoneService;
 
-    public function __construct(PayunityService $payunity)
+    public function __construct(PayoneService $payoneService)
     {
-        $this->payunity = $payunity;
+        $this->payoneService = $payoneService;
     }
 
     public function start(string $pspContract, string $pspMethod, PaymentPersistence $paymentPersistence): StartResponseInterface
     {
-        $this->payunity->startPayment($pspContract, $pspMethod, $paymentPersistence);
-        $widgetUrl = $this->payunity->getWidgetUrl($paymentPersistence);
+        $widgetUrl = $this->payoneService->startPayment($pspContract, $pspMethod, $paymentPersistence);
         $data = null;
         $error = null;
 
@@ -43,19 +42,19 @@ class PayunityFlexService implements PaymentServiceProviderServiceInterface, Log
 
     public function getPaymentIdForPspData(string $pspData): ?string
     {
-        return $this->payunity->getPaymentIdForPspData($pspData);
+        return $this->payoneService->getPaymentIdForPspData($pspData);
     }
 
     public function complete(string $pspContract, PaymentPersistence $paymentPersistence): CompleteResponseInterface
     {
-        $this->payunity->updatePaymentStatus($pspContract, $paymentPersistence);
+        $this->payoneService->updatePaymentStatus($pspContract, $paymentPersistence);
 
         return new CompleteResponse($paymentPersistence->getReturnUrl());
     }
 
     public function cleanup(string $pspContract, PaymentPersistence $paymentPersistence): bool
     {
-        $this->payunity->cleanupPaymentData($paymentPersistence);
+        $this->payoneService->cleanupPaymentData($paymentPersistence);
 
         return true;
     }
@@ -63,7 +62,7 @@ class PayunityFlexService implements PaymentServiceProviderServiceInterface, Log
     public function getPspContracts(): array
     {
         $ids = [];
-        foreach ($this->payunity->getContracts() as $contract) {
+        foreach ($this->payoneService->getContracts() as $contract) {
             $ids[] = $contract->getIdentifier();
         }
 
@@ -72,7 +71,7 @@ class PayunityFlexService implements PaymentServiceProviderServiceInterface, Log
 
     public function getPspMethods(string $pspContract): array
     {
-        foreach ($this->payunity->getContracts() as $contract) {
+        foreach ($this->payoneService->getContracts() as $contract) {
             if ($contract->getIdentifier() === $pspContract) {
                 return array_keys($contract->getPaymentMethods());
             }

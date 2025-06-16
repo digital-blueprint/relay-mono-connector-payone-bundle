@@ -68,10 +68,13 @@ class Kernel extends BaseKernel
         $container->extension('dbp_relay_mono_connector_payone', [
             'database_url' => 'sqlite:///:memory:',
             'payment_contracts' => [
-                'payunity_flex' => [
+                'payone_hosted_payment_page' => [
                     'api_url' => '',
-                    'entity_id' => '',
-                    'access_token' => '',
+                    'merchant_id' => '',
+                    'api_key' => '',
+                    'api_secret' => '',
+                    'webhook_id' => '',
+                    'webhook_secret' => '',
                     'payment_methods' => [
                         'foobar' => [],
                     ],

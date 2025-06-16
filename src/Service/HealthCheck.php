@@ -7,34 +7,28 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckInterface;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckOptions;
 use Dbp\Relay\CoreBundle\HealthCheck\CheckResult;
-use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
 use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 
 class HealthCheck implements CheckInterface
 {
     /**
-     * @var PayunityService
+     * @var PayoneService
      */
-    private $payunity;
+    private $payoneService;
     /**
      * @var PaymentDataService
      */
     private $dataService;
-    /**
-     * @var ConfigurationService
-     */
-    private $config;
 
-    public function __construct(PayunityService $payunity, PaymentDataService $dataService, ConfigurationService $config)
+    public function __construct(PayoneService $payoneService, PaymentDataService $dataService)
     {
-        $this->payunity = $payunity;
+        $this->payoneService = $payoneService;
         $this->dataService = $dataService;
-        $this->config = $config;
     }
 
     public function getName(): string
     {
-        return 'mono-connector-payunity';
+        return 'mono-connector-payone';
     }
 
     /**
@@ -61,10 +55,9 @@ class HealthCheck implements CheckInterface
 
         $results[] = $this->checkMethod('Check if we can connect to the DB', [$this->dataService, 'checkConnection']);
 
-        foreach ($this->payunity->getContracts() as $contract) {
+        foreach ($this->payoneService->getContracts() as $contract) {
             $id = $contract->getIdentifier();
-            $results[] = $this->checkMethod('Check contract config ('.$id.')', [$this->config, 'checkConfig'], [$id]);
-            $results[] = $this->checkMethod('Check if we can connect to the PayUnity API ('.$id.')', [$this->payunity, 'checkConnection'], [$id]);
+            $results[] = $this->checkMethod('Check if we can connect to the PAYONE API ('.$id.')', [$this->payoneService, 'checkConnection'], [$id]);
         }
 
         return $results;

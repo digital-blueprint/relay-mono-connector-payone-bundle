@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\Checkout;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Checkout;
 use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -43,8 +43,8 @@ class PaymentDataServiceTest extends KernelTestCase
     {
         $checkout = new Checkout();
         $checkout->fromJsonResponse([
-            'result' => ['code' => '123', 'description' => 'hello'],
-            'id' => 'checkout-id',
+            'hostedCheckoutId' => 'checkout-id',
+            'redirectUrl' => 'https://redirect-url',
         ]);
         $payment = new PaymentPersistence();
         $payment->setIdentifier('foo');

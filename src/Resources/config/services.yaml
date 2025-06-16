@@ -3,12 +3,6 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Controller\Widget:
-    autowire: true
-    autoconfigure: true
-    calls:
-      - setAuditLogger: [ '@monolog.logger.dbp_relay_mono_audit' ]
-
   Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService:
     autowire: true
     autoconfigure: true
@@ -19,16 +13,14 @@ services:
     arguments:
       $em: '@doctrine.orm.dbp_relay_mono_connector_payone_bundle_entity_manager'
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayunityFlexService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayoneHostedCheckoutPageService:
     autowire: true
     autoconfigure: true
     public: true
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\PayunityWebhookService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\PayoneWebhookService:
     autowire: true
     autoconfigure: true
-    calls:
-      - setAuditLogger: [ '@monolog.logger.dbp_relay_mono_audit' ]
 
   Dbp\Relay\MonoConnectorPayoneBundle\Service\HealthCheck:
     autowire: true
@@ -38,7 +30,7 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayunityService:
+  Dbp\Relay\MonoConnectorPayoneBundle\Service\PayoneService:
     autowire: true
     autoconfigure: true
     calls:

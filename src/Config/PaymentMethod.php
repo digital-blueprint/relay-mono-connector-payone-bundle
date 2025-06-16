@@ -14,7 +14,7 @@ class PaymentMethod
     /**
      * @var string[]
      */
-    private array $brands;
+    private array $products;
 
     public function getIdentifier(): string
     {
@@ -29,16 +29,16 @@ class PaymentMethod
     /**
      * @return string[]
      */
-    public function getBrands(): array
+    public function getProducts(): array
     {
-        return $this->brands;
+        return $this->products;
     }
 
     /**
-     * @param string[] $brands
+     * @param string[] $products
      */
-    public function setBrands(array $brands): void
+    public function setProducts(array $products): void
     {
-        $this->brands = $brands;
+        $this->products = $products;
     }
 }

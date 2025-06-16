@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayoneBundle\PayUnity;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Payone;
 
 /**
- * https://payunity.docs.oppwa.com/reference/resultCodes.
+ * https://developer.payone.com/de/integration/api-developer-guide/statuses.
  */
-class ResultCode
+class ResultStatusCode
 {
     /**
-     * @var string
+     * @var int
      */
     private $code;
     /**
@@ -18,13 +18,13 @@ class ResultCode
      */
     private $description;
 
-    public function __construct(string $code, string $description = '')
+    public function __construct(int $code, string $description = '')
     {
         $this->code = $code;
         $this->description = $description;
     }
 
-    public function getCode(): string
+    public function getCode(): int
     {
         return $this->code;
     }
@@ -34,12 +34,12 @@ class ResultCode
         return $this->description;
     }
 
-    private function matches(string $pattern): bool
+    /**
+     * @param array<int,int> $allowedStatusCodes - allowed status codes
+     */
+    private function matches(array $allowedStatusCodes): bool
     {
-        $res = preg_match($pattern, $this->code);
-        assert($res !== false);
-
-        return $res === 1;
+        return in_array($this->code, $allowedStatusCodes, true);
     }
 
     /**
@@ -47,7 +47,7 @@ class ResultCode
      */
     public function isSuccessfullyProcessed(): bool
     {
-        return $this->matches('/^(000\.000\.|000\.100\.1|000\.[36])/');
+        return $this->matches([9]);
     }
 
     /**
@@ -55,7 +55,12 @@ class ResultCode
      */
     public function isSuccessfullyProcessedNeedsManualReview(): bool
     {
-        return $this->matches('/^(000\.400\.0[^3]|000\.400\.[0-1]{2}0)/');
+        return false;
+    }
+
+    public function isCapturable(): bool
+    {
+        return $this->matches([5, 56]);
     }
 
     /**
@@ -65,7 +70,7 @@ class ResultCode
      */
     public function isPending(): bool
     {
-        return $this->matches('/^(000\.200)/');
+        return $this->matches([5, 56, 50, 51, 55, 4, 91, 92, 99]);
     }
 
     /**
@@ -73,6 +78,6 @@ class ResultCode
      */
     public function isPendingExtra(): bool
     {
-        return $this->matches('/^(800\.400\.5|100\.400\.500)/');
+        return false;
     }
 }

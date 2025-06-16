@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Dbp\Relay\MonoConnectorPayoneBundle\PayUnity;
+namespace Dbp\Relay\MonoConnectorPayoneBundle\Payone;
 
 use GuzzleHttp\MessageFormatter;
 use GuzzleHttp\Middleware;
@@ -10,9 +10,9 @@ use Psr\Log\LoggerInterface;
 
 class Tools
 {
-    public static function floatToAmount(float $amount): string
+    public static function floatToAmount(float $amount): int
     {
-        return number_format($amount, 2, '.', '');
+        return (int) ($amount * 100);
     }
 
     public static function createLoggerMiddleware(LoggerInterface $logger): callable
