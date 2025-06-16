@@ -9,7 +9,7 @@
         "ext-json": "*",
         "ext-openssl": "*",
         "dbp/relay-core-bundle": "^0.1.186",
-        "dbp/relay-mono-bundle": "*@dev",
+        "dbp/relay-mono-bundle": "^0.5.1",
         "doctrine/dbal": "^3.8 || ^4.0",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/migrations": "^3.3",
