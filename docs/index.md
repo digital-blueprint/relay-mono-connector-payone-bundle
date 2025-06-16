@@ -9,16 +9,16 @@ flowchart LR
         mono_payone_bundle["Payone Connector"]
     end
 
-    subgraph PayUnity
-        payunity_api["PayUnity API"]
+    subgraph Payone
+        payone_api["PAYONE API"]
     end
 
     mono_bundle --> mono_payone_bundle
-    mono_payone_bundle <--> payunity_api
+    mono_payone_bundle <--> payone_api
 ```
 
-The PayUnity Connector connects mono with [PayUnity](https://www.payunity.com/).
-It allows configuring multiple different payment contracts with PayUnity, each with
+The PAYONE Connector connects mono with [PAYONE](https://www.payone.com/).
+It allows configuring multiple different payment contracts with PAYONE, each with
 different payment methods.
 
 ## Bundle installation
@@ -32,8 +32,8 @@ composer require dbp/relay-mono-connector-payone-bundle
 ## Installation Requirements
 
 * A MySQL/MariaDB database
-* (for production use) A contract with [PayUnity](https://www.payunity.com/)
-* (for production use) A registered webhook with PayUnity
+* (for production use) A contract with [PAYONE](https://www.payone.com/)
+* (for production use) A registered webhook with PAYONE
 
 ## Documentation
 

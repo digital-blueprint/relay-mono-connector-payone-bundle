@@ -6,8 +6,6 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Webhook;
 
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
-use Dbp\Relay\MonoConnectorPayoneBundle\PayUnity\WebhookRequest;
-use Dbp\Relay\MonoConnectorPayoneBundle\Persistence\PaymentDataService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\NullLogger;
@@ -32,25 +30,18 @@ class Webhook extends AbstractController implements LoggerAwareInterface
     private $paymentService;
 
     /**
-     * @var PaymentDataService
+     * @var PayoneWebhookService
      */
-    private $paymentDataService;
-
-    /**
-     * @var PayunityWebhookService
-     */
-    private $payunityWebhookService;
+    private $payoneWebhookService;
 
     public function __construct(
         ConfigurationService $configurationService,
         PaymentService $paymentService,
-        PaymentDataService $paymentDataService,
-        PayunityWebhookService $payunityWebhookService
+        PayoneWebhookService $payoneWebhookService
     ) {
         $this->configurationService = $configurationService;
         $this->paymentService = $paymentService;
-        $this->paymentDataService = $paymentDataService;
-        $this->payunityWebhookService = $payunityWebhookService;
+        $this->payoneWebhookService = $payoneWebhookService;
         $this->logger = new NullLogger();
     }
 
@@ -60,49 +51,24 @@ class Webhook extends AbstractController implements LoggerAwareInterface
         if ($paymentContract === null) {
             throw new BadRequestHttpException('Unknown contract: '.$contract);
         }
-        $webhookRequest = $this->payunityWebhookService->decryptRequest(
+
+        $webhookRequest = $this->payoneWebhookService->decryptRequest(
             $paymentContract,
             $request
         );
 
-        $this->logger->debug('Handling webhook of type: '.$webhookRequest->getType());
+        $json = $webhookRequest->getPayload()->toJson();
+        $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        if ($webhookRequest->getType() === WebhookRequest::TYPE_TEST) {
-            // In case of a test we do nothing and just return "success"
-            $this->logger->debug('Test webhook detected, returning success');
+        $this->logger->debug('payone: webhook request', ['data' => $data]);
 
-            return new JsonResponse();
-        } elseif ($webhookRequest->getType() === WebhookRequest::TYPE_PAYMENT) {
-            $pspDataArray = $webhookRequest->getPayload();
-            $identifier = $pspDataArray['merchantTransactionId'] ?? null;
-
-            // fallback, if merchantTransactionId is not submitted
-            if (!$identifier) {
-                $this->logger->debug('No merchantTransactionId found, falling back');
-                $checkoutId = $pspDataArray['ndc'] ?? null;
-                if ($checkoutId === null) {
-                    throw new BadRequestHttpException('Checkout ID missing');
-                }
-                $paymentData = $this->paymentDataService->getByCheckoutId($checkoutId);
-                if ($paymentData === null) {
-                    throw new BadRequestHttpException('Unknown checkout ID: '.$checkoutId);
-                }
-                $identifier = $paymentData->getPaymentIdentifier();
-            }
-
+        if ($webhookRequest->getType() === WebhookRequest::TYPE_CAPTURED) {
+            $identifier = $webhookRequest->getIdentifier();
             $this->paymentService->completePayAction(
                 $identifier
             );
-
-            return new JsonResponse();
-        } elseif ($webhookRequest->getType() === WebhookRequest::TYPE_RISK) {
-            // Nothing to do
-            return new JsonResponse();
-        } elseif ($webhookRequest->getType() === WebhookRequest::TYPE_REGISTRATION) {
-            // Nothing to do
-            return new JsonResponse();
-        } else {
-            throw new BadRequestHttpException('Unknown webhook type: '.$webhookRequest->getType());
         }
+
+        return new JsonResponse();
     }
 }

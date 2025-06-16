@@ -6,7 +6,7 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Tests;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class PayunityFlexServiceTest extends KernelTestCase
+class PayoneServiceTest extends KernelTestCase
 {
     public function testKernel()
     {

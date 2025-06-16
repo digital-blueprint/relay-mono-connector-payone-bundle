@@ -13,24 +13,26 @@ dbp_relay_mono_connector_payone:
   payment_contracts:
     # Prototype
     payment_contract:
-      # The PayUnity API endpoint.
-      api_url:              ~ # Required, Example: 'https://eu-test.oppwa.com'
-      # The entityId provided by PayUnity
-      entity_id:            ~ # Required
-      # The access token provided by PayUnity
-      access_token:         ~ # Required
-      # The WebHook secret provided by PayUnity
-      webhook_secret:       null
-      # If an internal or external test system should be used. Only allowed to be set with the test server.
-      test_mode:            null # One of "internal"; "external"
+      # The PAYONE API endpoint.
+      api_url:              ~ # Required, Example: 'https://payment.preprod.payone.com/'
+      # The merchantId (PSPID) provided by PAYONE
+      merchant_id:          ~ # Required
+      # The API key ID provided by PAYONE
+      api_key:              ~ # Required
+      # The Secret API key provided by PAYONE
+      api_secret:           ~ # Required
+      # The Webhook ID provided by PAYONE
+      webhook_id:           ~ # Required
+      # The Secret webhook key provided by PAYONE
+      webhook_secret:       ~ # Required
       # Zero or more payment methods. The "payment_method" can be referenced in the "mono" config.
       payment_methods:
         # Prototype
         payment_method:
-          # A list of payment brands. See the PayUnity documentation for more info.
-          brands:               []
+          # A list of payment product labels. See Payment methods in the PAYONE portal
+          products:             []
             # Examples:
-            # - MASTER
+            # - MasterCard
             # - VISA
 ```
 
@@ -40,33 +42,27 @@ Example configuration:
 dbp_relay_mono_connector_payone:
   database_url: '%env(DATABASE_URL)%'
   payment_contracts:
-    payunity_flex_studienservice:
+    payone_studienservice:
       api_url: '%env(MONO_CONNECTOR_PAYONE_API_URL)%'
-      entity_id: '%env(MONO_CONNECTOR_PAYONE_ENTITY_ID)%'
-      access_token: '%env(MONO_CONNECTOR_PAYONE_ACCESS_TOKEN)%'
+      merchant_id: '%env(MONO_CONNECTOR_PAYONE_MERCHANT_ID)%'
+      api_key: '%env(MONO_CONNECTOR_PAYONE_API_KEY)%'
+      api_secret: '%env(MONO_CONNECTOR_PAYONE_API_SECRET)%'
+      webhook_id: '%env(MONO_CONNECTOR_PAYONE_WEBHOOK_ID)%'
       webhook_secret: '%env(MONO_CONNECTOR_PAYONE_WEBHOOK_SECRET)%'
       payment_methods:
         creditcard:
-          brands: ['AMEX', 'DINERS', 'DISCOVER', 'JCB', 'MASTER', 'VISA']
-        applepay:
-          brands: ['APPLEPAY']
+          products: [ 'American Express', 'Diners Club', 'MasterCard', 'JCB', 'Maestro', 'VISA' ]
         googlepay:
-          brands: ['GOOGLEPAY']
-        sofortueberweisung:
-          brands: ['SOFORTUEBERWEISUNG']
+          products: [ 'GOOGLEPAY' ]
 ```
-
-## Test Mode
-
-* `test_mode` is not allowed to be set when the payunity production server is configured, or payments will fail, see https://www.payunity.com/reference/parameters#testing
 
 ## Web Hook
 
-You can use the `dbp:relay:mono-connector-payunity:webhook-info` to see the URL you need to forward to PayUnity the webhook registration:
+You can use the `dbp:relay:mono-connector-payone:webhook-info` to see the URL you need to add as webhook endpoint in the PAYONE portal:
 
 ```console
-./bin/console dbp:relay:mono-connector-payunity:webhook-info payunity_flex_studienservice
-Webhook URL for PayUnity:
+./bin/console dbp:relay:mono-connector-payone:webhook-info payone_studienservice
+Endpoint url for PAYONE:
 
-http://localhost:8000/mono-connector-payunity/webhook/payunity_flex_studienservice
+http://localhost:8000/mono-connector-payone/webhook/payone_studienservice
 ```
