@@ -26,7 +26,11 @@ services:
     autowire: true
     autoconfigure: true
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\WebhookCommand:
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\WebhookInfoCommand:
+    autowire: true
+    autoconfigure: true
+
+  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\WebhookTestCommand:
     autowire: true
     autoconfigure: true
 
