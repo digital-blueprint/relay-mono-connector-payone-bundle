@@ -19,7 +19,7 @@ class Connection implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
 
-    private const INTEGRATOR = 'TU Graz';
+    private const INTEGRATOR = 'dbp/relay-mono-connector-payone-bundle';
 
     private $apiUrl;
     private $merchantId;
