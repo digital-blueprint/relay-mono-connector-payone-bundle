@@ -114,6 +114,9 @@ class PayoneService implements LoggerAwareInterface
     {
         $api = $this->getApiByContract($contract, null);
         $api->testConnection();
+
+        $contractConfig = $this->configService->getPaymentContractByIdentifier($contract);
+        $api->testWebhookCredentials($contractConfig->getWebhookId(), $contractConfig->getWebhookSecret());
     }
 
     /**

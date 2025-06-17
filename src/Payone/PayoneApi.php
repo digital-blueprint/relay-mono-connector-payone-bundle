@@ -19,6 +19,7 @@ use OnlinePayments\Sdk\Domain\Order;
 use OnlinePayments\Sdk\Domain\OrderReferences;
 use OnlinePayments\Sdk\Domain\PaymentProductFilter;
 use OnlinePayments\Sdk\Domain\PaymentProductFiltersHostedCheckout;
+use OnlinePayments\Sdk\Domain\ValidateCredentialsRequest;
 use OnlinePayments\Sdk\Merchant\Products\GetPaymentProductsParams;
 use OnlinePayments\Sdk\ResponseException;
 use Psr\Log\LoggerAwareInterface;
@@ -148,6 +149,18 @@ class PayoneApi implements LoggerAwareInterface
     {
         $client = $this->connection->getClient();
         $client->services()->testConnection();
+    }
+
+    public function testWebhookCredentials(string $webhookId, string $webhookSecret): void
+    {
+        $client = $this->connection->getClient();
+        $request = new ValidateCredentialsRequest();
+        $request->setKey($webhookId);
+        $request->setSecret(base64_encode(hash_hmac('sha256', '', $webhookSecret, true)));
+        $response = $client->webhooks()->validateWebhookCredentials($request);
+        if ($response->getResult() !== 'Valid') {
+            throw new \RuntimeException('Invalid webhook credentials. Result: '.$response->getResult());
+        }
     }
 
     /**
