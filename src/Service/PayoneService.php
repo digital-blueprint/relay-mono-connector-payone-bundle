@@ -112,7 +112,8 @@ class PayoneService implements LoggerAwareInterface
 
     public function checkConnection(string $contract): void
     {
-        // todo
+        $api = $this->getApiByContract($contract, null);
+        $api->testConnection();
     }
 
     /**

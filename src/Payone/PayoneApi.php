@@ -144,6 +144,12 @@ class PayoneApi implements LoggerAwareInterface
         return $checkout;
     }
 
+    public function testConnection(): void
+    {
+        $client = $this->connection->getClient();
+        $client->services()->testConnection();
+    }
+
     /**
      * Get the payment status.
      *
