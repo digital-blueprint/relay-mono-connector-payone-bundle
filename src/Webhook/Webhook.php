@@ -8,6 +8,7 @@ use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,6 +35,11 @@ class Webhook extends AbstractController implements LoggerAwareInterface
      */
     private $payoneWebhookService;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $auditLogger;
+
     public function __construct(
         ConfigurationService $configurationService,
         PaymentService $paymentService,
@@ -43,6 +49,12 @@ class Webhook extends AbstractController implements LoggerAwareInterface
         $this->paymentService = $paymentService;
         $this->payoneWebhookService = $payoneWebhookService;
         $this->logger = new NullLogger();
+        $this->auditLogger = new NullLogger();
+    }
+
+    public function setAuditLogger(LoggerInterface $auditLogger): void
+    {
+        $this->auditLogger = $auditLogger;
     }
 
     public function index(Request $request, string $contract): Response
@@ -60,7 +72,7 @@ class Webhook extends AbstractController implements LoggerAwareInterface
         $json = $webhookRequest->getPayload()->toJson();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->logger->debug('payone: webhook request', ['data' => $data]);
+        $this->auditLogger->debug('payone: webhook request', ['data' => $data]);
 
         if ($webhookRequest->getType() === WebhookRequest::TYPE_CAPTURED) {
             $identifier = $webhookRequest->getIdentifier();

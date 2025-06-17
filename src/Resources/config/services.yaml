@@ -2,6 +2,8 @@ services:
   Dbp\Relay\MonoConnectorPayoneBundle\Webhook\Webhook:
     autowire: true
     autoconfigure: true
+    calls:
+      - setAuditLogger: ['@monolog.logger.dbp_relay_mono_audit']
 
   Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService:
     autowire: true
