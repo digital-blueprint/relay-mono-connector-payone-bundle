@@ -6,7 +6,6 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Payone;
 
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoConnectorPayoneBundle\Service\Utils;
-use GuzzleHttp\Exception\RequestException;
 use OnlinePayments\Sdk\Domain\AmountOfMoney;
 use OnlinePayments\Sdk\Domain\CapturePaymentRequest;
 use OnlinePayments\Sdk\Domain\CardPaymentMethodSpecificInput;
@@ -178,7 +177,7 @@ class PayoneApi implements LoggerAwareInterface
 
         try {
             $response = $client->hostedCheckout()->getHostedCheckout($checkoutId);
-        } catch (RequestException $e) {
+        } catch (\Exception $e) {
             throw self::createResponseError($e);
         }
 
@@ -200,7 +199,7 @@ class PayoneApi implements LoggerAwareInterface
             $client->payments()->capturePayment($paymentId, $capturePaymentRequest);
 
             return true;
-        } catch (RequestException $e) {
+        } catch (\Exception $e) {
             throw self::createResponseError($e);
         }
     }
