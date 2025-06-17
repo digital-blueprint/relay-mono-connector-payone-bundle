@@ -79,13 +79,12 @@ class PayoneApi implements LoggerAwareInterface
     /**
      * Prepare a checkout.
      *
-     * @param PaymentPersistence   $payment            - Payment
-     * @param                      $amount             - Indicates the amount of the payment request. The dot is used as decimal separator.
-     * @param                      $currency           - The currency code of the payment request's amount (ISO 4217)
-     * @param array<string>        $restrictToProducts - Restrict the payment products to the given list
-     * @param array<string,string> $extra              - extra key/value pairs passed to the API, see the docs
+     * @param PaymentPersistence $payment            - Payment
+     * @param                    $amount             - Indicates the amount of the payment request. The dot is used as decimal separator.
+     * @param                    $currency           - The currency code of the payment request's amount (ISO 4217)
+     * @param array<string>      $restrictToProducts - Restrict the payment products to the given list
      */
-    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts, array $extra = []): Checkout
+    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts): Checkout
     {
         $client = $this->connection->getClient();
 
