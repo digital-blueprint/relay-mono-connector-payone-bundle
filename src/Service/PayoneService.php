@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoConnectorPayoneBundle\Service;
 
 use Dbp\Relay\CoreBundle\Exception\ApiError;
+use Dbp\Relay\CoreBundle\Locale\Locale;
 use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoBundle\Persistence\PaymentStatus;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
@@ -57,6 +58,7 @@ class PayoneService implements LoggerAwareInterface
         PaymentDataService $paymentDataService,
         LockFactory $lockFactory,
         ConfigurationService $configService,
+        private Locale $locale,
     ) {
         $this->paymentDataService = $paymentDataService;
         $this->lockFactory = $lockFactory;
@@ -165,7 +167,7 @@ class PayoneService implements LoggerAwareInterface
         $api = $this->getApiByContract($pspContract, $payment);
 
         try {
-            $checkout = $api->prepareCheckout($payment, $amount, $currency, $restrictToProducts);
+            $checkout = $api->prepareCheckout($payment, $amount, $currency, $restrictToProducts, $this->locale->getCurrentPrimaryLanguage());
         } catch (ApiException $e) {
             $this->logger->error('Communication error with payment service provider!', ['exception' => $e]);
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Communication error with payment service provider!');

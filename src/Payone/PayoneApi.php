@@ -83,8 +83,9 @@ class PayoneApi implements LoggerAwareInterface
      * @param                    $amount             - Indicates the amount of the payment request. The dot is used as decimal separator.
      * @param                    $currency           - The currency code of the payment request's amount (ISO 4217)
      * @param array<string>      $restrictToProducts - Restrict the payment products to the given list
+     * @param string             $locale             - Locale in ISO 639-1 format
      */
-    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts): Checkout
+    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts, string $locale): Checkout
     {
         $client = $this->connection->getClient();
 
@@ -108,6 +109,7 @@ class PayoneApi implements LoggerAwareInterface
         $hostedCheckoutSpecificInput = new HostedCheckoutSpecificInput();
         $returnUrl = Utils::extendReturnUrl($payment->getPspReturnUrl());
         $hostedCheckoutSpecificInput->setReturnUrl($returnUrl);
+        $hostedCheckoutSpecificInput->setLocale($locale);
 
         if (count($restrictToProducts) > 0) {
             $paymentProductsQuery = new GetPaymentProductsParams();
