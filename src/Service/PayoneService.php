@@ -209,6 +209,8 @@ class PayoneService implements LoggerAwareInterface
         $lock->acquire(true);
         try {
             $checkoutData = $this->prepareCheckout($payment, $pspContract, $pspMethod, $amount, $currency, $restrictToProducts, $extra);
+            // TODO: get the real status
+            $payment->setPaymentStatus(PaymentStatus::PENDING);
         } finally {
             $lock->release();
         }
