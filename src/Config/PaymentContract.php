@@ -24,7 +24,7 @@ class PaymentContract
     /**
      * @var string
      */
-    private $apiKey;
+    private $apiKeyId;
 
     /**
      * @var string
@@ -76,14 +76,14 @@ class PaymentContract
         $this->merchantId = $merchantId;
     }
 
-    public function getApiKey(): string
+    public function getApiKeyId(): string
     {
-        return $this->apiKey;
+        return $this->apiKeyId;
     }
 
-    public function setApiKey(string $apiKey): void
+    public function setApiKeyId(string $apiKey): void
     {
-        $this->apiKey = $apiKey;
+        $this->apiKeyId = $apiKey;
     }
 
     public function getApiSecret(): string
@@ -146,7 +146,7 @@ class PaymentContract
         $paymentContract->setIdentifier($identifier);
         $paymentContract->setApiUrl($config['api_url']);
         $paymentContract->setMerchantId($config['merchant_id']);
-        $paymentContract->setApiKey($config['api_key']);
+        $paymentContract->setApiKeyId($config['api_key_id']);
         $paymentContract->setApiSecret($config['api_secret']);
         $paymentContract->setWebhookId($config['webhook_id']);
         $paymentContract->setWebhookSecret($config['webhook_secret']);

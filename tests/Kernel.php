@@ -71,7 +71,7 @@ class Kernel extends BaseKernel
                 'payone_hosted_payment_page' => [
                     'api_url' => '',
                     'merchant_id' => '',
-                    'api_key' => '',
+                    'api_key_id' => '',
                     'api_secret' => '',
                     'webhook_id' => '',
                     'webhook_secret' => '',

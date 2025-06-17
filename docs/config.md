@@ -45,7 +45,7 @@ dbp_relay_mono_connector_payone:
     payone_studienservice:
       api_url: '%env(MONO_CONNECTOR_PAYONE_API_URL)%'
       merchant_id: '%env(MONO_CONNECTOR_PAYONE_MERCHANT_ID)%'
-      api_key: '%env(MONO_CONNECTOR_PAYONE_API_KEY)%'
+      api_key_id: '%env(MONO_CONNECTOR_PAYONE_API_KEY_ID)%'
       api_secret: '%env(MONO_CONNECTOR_PAYONE_API_SECRET)%'
       webhook_id: '%env(MONO_CONNECTOR_PAYONE_WEBHOOK_ID)%'
       webhook_secret: '%env(MONO_CONNECTOR_PAYONE_WEBHOOK_SECRET)%'

@@ -36,7 +36,7 @@ class Configuration implements ConfigurationInterface
                                     ->info('The merchantId (PSPID) provided by PAYONE')
                                     ->isRequired()
                                 ->end()
-                                ->scalarNode('api_key')
+                                ->scalarNode('api_key_id')
                                     ->info('The API key ID provided by PAYONE')
                                     ->isRequired()
                                 ->end()

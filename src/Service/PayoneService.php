@@ -131,7 +131,7 @@ class PayoneService implements LoggerAwareInterface
             $this->connection[$contractId] = new Connection(
                 $contract->getApiUrl(),
                 $contract->getMerchantId(),
-                $contract->getApiKey(),
+                $contract->getApiKeyId(),
                 $contract->getApiSecret(),
             );
         }

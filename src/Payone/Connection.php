@@ -22,14 +22,14 @@ class Connection implements LoggerAwareInterface
 
     private $apiUrl;
     private $merchantId;
-    private $apiKey;
+    private $apiKeyId;
     private $apiSecret;
 
-    public function __construct(string $apiUrl, string $merchantId, string $apiKey, string $apiSecret)
+    public function __construct(string $apiUrl, string $merchantId, string $apiKeyId, string $apiSecret)
     {
         $this->apiUrl = $apiUrl;
         $this->merchantId = $merchantId;
-        $this->apiKey = $apiKey;
+        $this->apiKeyId = $apiKeyId;
         $this->apiSecret = $apiSecret;
         $this->logger = new NullLogger();
     }
@@ -37,7 +37,7 @@ class Connection implements LoggerAwareInterface
     public function getClient(): MerchantClient|MerchantClientInterface
     {
         $communicatorConfiguration = new CommunicatorConfiguration(
-            $this->apiKey,
+            $this->apiKeyId,
             $this->apiSecret,
             $this->apiUrl,
             self::INTEGRATOR,
