@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.2
+
+* Add webhook test command
+* Log webhook requests to the audit log
+
 ## v0.3.1
 
 * Forward the API locale to the hosted checkout page
