@@ -156,7 +156,7 @@ class PayoneService implements LoggerAwareInterface
     /**
      * @param array<string,mixed> $restrictToProducts
      */
-    public function prepareCheckout(PaymentPersistence $payment, string $pspContract, string $pspMethod, int $amount, string $currency, array $restrictToProducts): Checkout
+    public function prepareCheckout(PaymentPersistence $payment, string $pspContract, string $pspMethod, int $amount, string $currency, array $restrictToProducts, ?string $variant): Checkout
     {
         $existingPaymentData = $this->paymentDataService->getByPaymentIdentifier($payment->getIdentifier());
         if ($existingPaymentData !== null) {
@@ -167,7 +167,7 @@ class PayoneService implements LoggerAwareInterface
         $api = $this->getApiByContract($pspContract, $payment);
 
         try {
-            $checkout = $api->prepareCheckout($payment, $amount, $currency, $restrictToProducts, $this->locale->getCurrentPrimaryLanguage());
+            $checkout = $api->prepareCheckout($payment, $amount, $currency, $restrictToProducts, $this->locale->getCurrentPrimaryLanguage(), $variant);
         } catch (ApiException $e) {
             $this->logger->error('Communication error with payment service provider!', ['exception' => $e]);
             throw new ApiError(Response::HTTP_INTERNAL_SERVER_ERROR, 'Communication error with payment service provider!');
@@ -198,14 +198,14 @@ class PayoneService implements LoggerAwareInterface
         $contract = $this->getPaymentContractByIdentifier($pspContract);
         $amount = Tools::floatToAmount((float) $payment->getAmount());
         $currency = $payment->getCurrency();
-        $extra = [];
         $paymentMethods = $contract->getPaymentMethod($pspMethod);
         $restrictToProducts = $paymentMethods->getProducts();
+        $templateVariant = $paymentMethods->getTemplateVariant();
 
         $lock = $this->createPaymentLock($payment);
         $lock->acquire(true);
         try {
-            $checkoutData = $this->prepareCheckout($payment, $pspContract, $pspMethod, $amount, $currency, $restrictToProducts);
+            $checkoutData = $this->prepareCheckout($payment, $pspContract, $pspMethod, $amount, $currency, $restrictToProducts, $templateVariant);
             // TODO: get the real status
             $payment->setPaymentStatus(PaymentStatus::PENDING);
         } finally {

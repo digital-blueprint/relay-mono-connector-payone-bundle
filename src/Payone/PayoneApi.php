@@ -86,7 +86,7 @@ class PayoneApi implements LoggerAwareInterface
      * @param array<string>      $restrictToProducts - Restrict the payment products to the given list
      * @param string             $locale             - Locale in ISO 639-1 format
      */
-    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts, string $locale): Checkout
+    public function prepareCheckout(PaymentPersistence $payment, int $amount, string $currency, array $restrictToProducts, string $locale, ?string $variant): Checkout
     {
         $client = $this->connection->getClient();
 
@@ -111,6 +111,9 @@ class PayoneApi implements LoggerAwareInterface
         $returnUrl = Utils::extendReturnUrl($payment->getPspReturnUrl());
         $hostedCheckoutSpecificInput->setReturnUrl($returnUrl);
         $hostedCheckoutSpecificInput->setLocale($locale);
+        if ($variant !== null) {
+            $hostedCheckoutSpecificInput->setVariant($variant);
+        }
 
         if (count($restrictToProducts) > 0) {
             $paymentProductsQuery = new GetPaymentProductsParams();

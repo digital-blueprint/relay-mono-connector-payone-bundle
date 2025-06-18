@@ -18,7 +18,7 @@ dbp_relay_mono_connector_payone:
       # The merchantId (PSPID) provided by PAYONE
       merchant_id:          ~ # Required
       # The API key ID provided by PAYONE
-      api_key:              ~ # Required
+      api_key_id:           ~ # Required
       # The Secret API key provided by PAYONE
       api_secret:           ~ # Required
       # The Webhook ID provided by PAYONE
@@ -34,6 +34,8 @@ dbp_relay_mono_connector_payone:
             # Examples:
             # - MasterCard
             # - VISA
+          # The variant/template variant name used (for theming/branding of the payment website)
+          template_variant:     ~ # Example: SimplifiedCustomPaymentPage
 ```
 
 Example configuration:

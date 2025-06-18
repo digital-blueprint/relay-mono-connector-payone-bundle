@@ -155,6 +155,7 @@ class PaymentContract
             $paymentMethod = new PaymentMethod();
             $paymentMethod->setIdentifier($id);
             $paymentMethod->setProducts($paymentMethodConfig['products']);
+            $paymentMethod->setTemplateVariant($paymentMethodConfig['template_variant'] ?? null);
             $paymentMethods[$id] = $paymentMethod;
         }
         $paymentContract->setPaymentMethods($paymentMethods);

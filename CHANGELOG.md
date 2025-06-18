@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.4
+
+* Add bundle config option to select the template variant for the hosted checkout page
+
 ## v0.3.3
 
 * Obfuscate payment data when logging it to the audit log
