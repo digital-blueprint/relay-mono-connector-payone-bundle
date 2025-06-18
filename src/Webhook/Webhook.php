@@ -6,6 +6,7 @@ namespace Dbp\Relay\MonoConnectorPayoneBundle\Webhook;
 
 use Dbp\Relay\MonoBundle\Service\PaymentService;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
+use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Tools;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
@@ -72,7 +73,7 @@ class Webhook extends AbstractController implements LoggerAwareInterface
         $json = $webhookRequest->getPayload()->toJson();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 
-        $this->auditLogger->debug('payone: webhook request', ['data' => $data]);
+        $this->auditLogger->debug('payone: webhook request', ['data' => Tools::obfuscatePaymentData($data)]);
 
         if ($webhookRequest->getType() === WebhookRequest::TYPE_CAPTURED) {
             $identifier = $webhookRequest->getIdentifier();

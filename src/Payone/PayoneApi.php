@@ -230,7 +230,8 @@ class PayoneApi implements LoggerAwareInterface
     {
         $json = $response->toJson();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        $this->auditLogger->debug('payone: get hosted checkout response', $this->withLoggingContext(['data' => $data]));
+
+        $this->auditLogger->debug('payone: get hosted checkout response', $this->withLoggingContext(['data_obfuscated' => Tools::obfuscatePaymentData($data)]));
 
         $paymentData = new PaymentData();
         $paymentData->fromJsonResponse($data['createdPaymentOutput']);
