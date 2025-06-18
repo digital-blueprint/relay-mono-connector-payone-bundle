@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.3
+
+* Obfuscate payment data when logging it to the audit log
+
 ## v0.3.2
 
 * Add webhook test command
