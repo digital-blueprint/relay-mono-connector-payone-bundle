@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use Dbp\Relay\MonoConnectorPayoneBundle\Webhook\WebhookRequest;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\Request;
 
 class WebhookTest extends TestCase
 {
@@ -78,18 +77,9 @@ class WebhookTest extends TestCase
 
     public function testWebhook()
     {
-        $secretKey = 'test-secret-key-12345';
         $keyId = 'test-key-id';
-        $signature = base64_encode(hash_hmac('sha256', self::PAYLOAD, $secretKey, true));
-
-        $request = new Request(
-            server: [
-                'HTTP_X_GCS_SIGNATURE' => $signature,
-                'HTTP_X_GCS_KEYID' => $keyId,
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            content: self::PAYLOAD
-        );
+        $secretKey = 'test-secret-key-12345';
+        $request = WebhookRequest::createTestRequest($keyId, $secretKey, self::PAYLOAD);
 
         $webhookRequest = WebhookRequest::validateRequest($keyId, $secretKey, $request);
         $this->assertSame(WebhookRequest::TYPE_CAPTURED, $webhookRequest->getType());
@@ -98,18 +88,9 @@ class WebhookTest extends TestCase
 
     public function testWebhookWrongKeyId()
     {
-        $secretKey = 'test-secret-key-12345';
         $keyId = 'test-key-id';
-        $signature = base64_encode(hash_hmac('sha256', self::PAYLOAD, $secretKey, true));
-
-        $request = new Request(
-            server: [
-                'HTTP_X_GCS_SIGNATURE' => $signature,
-                'HTTP_X_GCS_KEYID' => $keyId,
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            content: self::PAYLOAD
-        );
+        $secretKey = 'test-secret-key-12345';
+        $request = WebhookRequest::createTestRequest($keyId, $secretKey, self::PAYLOAD);
 
         $this->expectException(Exception::class);
         WebhookRequest::validateRequest('wrongid', $secretKey, $request);
@@ -117,20 +98,21 @@ class WebhookTest extends TestCase
 
     public function testWebhookWrongKeySecret()
     {
-        $secretKey = 'test-secret-key-12345';
         $keyId = 'test-key-id';
-        $signature = base64_encode(hash_hmac('sha256', self::PAYLOAD, $secretKey, true));
-
-        $request = new Request(
-            server: [
-                'HTTP_X_GCS_SIGNATURE' => $signature,
-                'HTTP_X_GCS_KEYID' => $keyId,
-                'CONTENT_TYPE' => 'application/json',
-            ],
-            content: self::PAYLOAD
-        );
+        $secretKey = 'test-secret-key-12345';
+        $request = WebhookRequest::createTestRequest($keyId, $secretKey, self::PAYLOAD);
 
         $this->expectException(Exception::class);
         WebhookRequest::validateRequest($keyId, 'nope', $request);
+    }
+
+    public function testMinimal()
+    {
+        $keyId = 'test-key-id';
+        $secretKey = 'test-secret-key-12345';
+        $request = WebhookRequest::createTestRequest($keyId, $secretKey, '{"apiVersion": "v1", "type": "test", "payment": {"paymentOutput": {"references": {"merchantReference": "something"}}}}');
+
+        WebhookRequest::validateRequest($keyId, $secretKey, $request);
+        $this->expectNotToPerformAssertions();
     }
 }

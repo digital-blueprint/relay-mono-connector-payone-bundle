@@ -66,6 +66,26 @@ class WebhookInfoCommand extends Command
                 ['contract' => $contract->getIdentifier()],
                 UrlGeneratorInterface::ABSOLUTE_URL);
             $output->writeln("Webhook URL for payone:\n\n".$webhookUrl);
+
+            // To allow users to test their setup, give them a curl command faking a webhook test call
+            $output->writeln('');
+
+            $jsonPayload = '{"apiVersion": "v1", "type": "test", "payment": {"paymentOutput": {"references": {"merchantReference": "something"}}}}';
+            $request = WebhookRequest::createTestRequest($contract->getWebhookId(), $contract->getWebhookSecret(), $jsonPayload);
+
+            $curl = [
+                'curl',
+                '-X', 'POST',
+                '-i', '--fail',
+                '-H', escapeshellarg('Content-Type: application/json'),
+                '-H', escapeshellarg('X-GCS-Signature: '.$request->headers->get('X-GCS-Signature')),
+                '-H', escapeshellarg('X-GCS-KeyId: '.$request->headers->get('X-GCS-KeyId')),
+                '-d', escapeshellarg($request->getContent()),
+                escapeshellarg($webhookUrl),
+            ];
+
+            $output->writeln("CURL test command:\n");
+            $output->writeln(implode(' ', $curl));
         }
 
         return Command::SUCCESS;

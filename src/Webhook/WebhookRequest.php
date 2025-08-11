@@ -98,4 +98,21 @@ class WebhookRequest
 
         return $webhookRequest;
     }
+
+    /**
+     * Create a dummy signed webhook request, which the webhook endpoint would validate.
+     */
+    public static function createTestRequest(string $keyId, string $secretKey, string $payload): Request
+    {
+        $signature = base64_encode(hash_hmac('sha256', $payload, $secretKey, true));
+
+        return new Request(
+            server: [
+                'HTTP_X_GCS_SIGNATURE' => $signature,
+                'HTTP_X_GCS_KEYID' => $keyId,
+                'CONTENT_TYPE' => 'application/json',
+            ],
+            content: $payload
+        );
+    }
 }

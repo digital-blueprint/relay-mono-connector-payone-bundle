@@ -96,22 +96,22 @@ class PaymentContract
         $this->apiSecret = $apiSecret;
     }
 
-    public function setWebhookId(?string $webhookId): void
+    public function setWebhookId(string $webhookId): void
     {
         $this->webhookId = $webhookId;
     }
 
-    public function getWebhookId(): ?string
+    public function getWebhookId(): string
     {
         return $this->webhookId;
     }
 
-    public function setWebhookSecret(?string $webhookSecret): void
+    public function setWebhookSecret(string $webhookSecret): void
     {
         $this->webhookSecret = $webhookSecret;
     }
 
-    public function getWebhookSecret(): ?string
+    public function getWebhookSecret(): string
     {
         return $this->webhookSecret;
     }
