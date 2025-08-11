@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Dbp\Relay\MonoConnectorPayoneBundle\Webhook;
 
 use OnlinePayments\Sdk\Domain\WebhooksEvent;
+use OnlinePayments\Sdk\Webhooks\InMemorySecretKeyStore;
+use OnlinePayments\Sdk\Webhooks\WebhooksHelper;
+use Symfony\Component\HttpFoundation\Request;
 
 class WebhookRequest
 {
@@ -71,5 +74,28 @@ class WebhookRequest
     public function getPayload(): WebhooksEvent
     {
         return $this->payload;
+    }
+
+    public static function validateRequest(string $keyId, string $secretKey, Request $request): WebhookRequest
+    {
+        $secretKeyStore = new InMemorySecretKeyStore([$keyId => $secretKey]);
+        $webhooksHelper = new WebhooksHelper($secretKeyStore);
+        $body = $request->getContent();
+        $allRequestHeaders = $request->headers->all();
+        $flattenedRequestHeaders = array_map(function ($requestHeaders) {
+            return $requestHeaders[0];
+        }, $allRequestHeaders);
+        $event = $webhooksHelper->unmarshal($body, $flattenedRequestHeaders);
+
+        $type = $event->type;
+        $identifier = $event->getPayment()->getPaymentOutput()->getReferences()->getMerchantReference();
+
+        $webhookRequest = new WebhookRequest(
+            $type,
+            $identifier,
+            $event
+        );
+
+        return $webhookRequest;
     }
 }

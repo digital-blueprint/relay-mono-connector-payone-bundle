@@ -32,11 +32,6 @@ class Webhook extends AbstractController implements LoggerAwareInterface
     private $paymentService;
 
     /**
-     * @var PayoneWebhookService
-     */
-    private $payoneWebhookService;
-
-    /**
      * @var LoggerInterface
      */
     private $auditLogger;
@@ -44,11 +39,9 @@ class Webhook extends AbstractController implements LoggerAwareInterface
     public function __construct(
         ConfigurationService $configurationService,
         PaymentService $paymentService,
-        PayoneWebhookService $payoneWebhookService
     ) {
         $this->configurationService = $configurationService;
         $this->paymentService = $paymentService;
-        $this->payoneWebhookService = $payoneWebhookService;
         $this->logger = new NullLogger();
         $this->auditLogger = new NullLogger();
     }
@@ -65,18 +58,20 @@ class Webhook extends AbstractController implements LoggerAwareInterface
             throw new BadRequestHttpException('Unknown contract: '.$contract);
         }
 
-        $webhookRequest = $this->payoneWebhookService->decryptRequest(
-            $paymentContract,
+        $this->auditLogger->debug('payone: handling webhook for contract: '.$contract);
+        $webhookRequest = WebhookRequest::validateRequest(
+            $paymentContract->getWebhookId(), $paymentContract->getWebhookSecret(),
             $request
         );
 
         $json = $webhookRequest->getPayload()->toJson();
+        $identifier = $webhookRequest->getIdentifier();
+        $type = $webhookRequest->getType();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+        $this->auditLogger->debug('payone: webhook request', ['type' => $type, 'identifier' => $identifier, 'data' => Tools::obfuscatePaymentData($data)]);
 
-        $this->auditLogger->debug('payone: webhook request', ['data' => Tools::obfuscatePaymentData($data)]);
-
-        if ($webhookRequest->getType() === WebhookRequest::TYPE_CAPTURED) {
-            $identifier = $webhookRequest->getIdentifier();
+        if ($type === WebhookRequest::TYPE_CAPTURED) {
+            $this->auditLogger->debug('payone: trying to complete payment', ['identifier' => $identifier]);
             $this->paymentService->completePayAction(
                 $identifier
             );
