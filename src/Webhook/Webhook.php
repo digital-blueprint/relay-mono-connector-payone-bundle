@@ -68,10 +68,10 @@ class Webhook extends AbstractController implements LoggerAwareInterface
         $identifier = $webhookRequest->getIdentifier();
         $type = $webhookRequest->getType();
         $data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
-        $this->auditLogger->debug('payone: webhook request', ['type' => $type, 'identifier' => $identifier, 'data' => Tools::obfuscatePaymentData($data)]);
+        $this->auditLogger->debug('payone: webhook request', ['event-type' => $type, 'relay-mono-payment-id' => $identifier, 'payload' => Tools::obfuscatePaymentData($data)]);
 
         if ($type === WebhookRequest::TYPE_CAPTURED) {
-            $this->auditLogger->debug('payone: trying to complete payment', ['identifier' => $identifier]);
+            $this->auditLogger->debug('payone: trying to complete payment via webhook', ['relay-mono-payment-id' => $identifier]);
             $this->paymentService->completePayAction(
                 $identifier
             );
