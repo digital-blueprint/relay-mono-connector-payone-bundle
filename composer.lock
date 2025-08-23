@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "772afed4f64575c3ce66e59ad5c55f0f",
+    "content-hash": "41fb943534440a63d0814c85fceec27f",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2531,16 +2531,16 @@
         },
         {
             "name": "online-payments/sdk-php",
-            "version": "6.2.0",
+            "version": "7.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Online-Payments/sdk-php.git",
-                "reference": "93f93047dff2ab3b757fec54577c1879748324b4"
+                "reference": "87d3813b1189d2bb1ae9fe9eb47f2f9961ec9a27"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/93f93047dff2ab3b757fec54577c1879748324b4",
-                "reference": "93f93047dff2ab3b757fec54577c1879748324b4",
+                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/87d3813b1189d2bb1ae9fe9eb47f2f9961ec9a27",
+                "reference": "87d3813b1189d2bb1ae9fe9eb47f2f9961ec9a27",
                 "shasum": ""
             },
             "require": {
@@ -2577,9 +2577,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Online-Payments/sdk-php/issues",
-                "source": "https://github.com/Online-Payments/sdk-php/tree/6.2.0"
+                "source": "https://github.com/Online-Payments/sdk-php/tree/7.0.0"
             },
-            "time": "2025-06-17T11:36:11+00:00"
+            "time": "2025-08-18T14:44:05+00:00"
         },
         {
             "name": "psr/cache",
