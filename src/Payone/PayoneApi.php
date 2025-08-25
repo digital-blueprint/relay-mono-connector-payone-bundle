@@ -8,7 +8,7 @@ use Dbp\Relay\MonoBundle\Persistence\PaymentPersistence;
 use Dbp\Relay\MonoConnectorPayoneBundle\Service\Utils;
 use OnlinePayments\Sdk\Domain\AmountOfMoney;
 use OnlinePayments\Sdk\Domain\CapturePaymentRequest;
-use OnlinePayments\Sdk\Domain\CardPaymentMethodSpecificInput;
+use OnlinePayments\Sdk\Domain\CardPaymentMethodSpecificInputBase;
 use OnlinePayments\Sdk\Domain\CreateHostedCheckoutRequest;
 use OnlinePayments\Sdk\Domain\CreateHostedCheckoutResponse;
 use OnlinePayments\Sdk\Domain\GetHostedCheckoutResponse;
@@ -92,7 +92,7 @@ class PayoneApi implements LoggerAwareInterface
 
         $createHostedCheckoutRequest = new CreateHostedCheckoutRequest();
 
-        $cardPaymentMethodSpecificInput = new CardPaymentMethodSpecificInput();
+        $cardPaymentMethodSpecificInput = new CardPaymentMethodSpecificInputBase();
         $cardPaymentMethodSpecificInput->setAuthorizationMode(AuthorizationMode::SALE);
         $createHostedCheckoutRequest->setCardPaymentMethodSpecificInput($cardPaymentMethodSpecificInput);
 
