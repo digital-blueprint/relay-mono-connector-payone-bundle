@@ -38,7 +38,7 @@ class Utils
      *  "payone?RETURNMAC=<RETURNMAC>&hostedCheckoutId=<HOSTED_CHECKOUT_ID>"
      * Returns false if the PSP data format isn't known, or parsing failed.
      *
-     * @return bool|string
+     * @return false|string
      */
     public static function extractCheckoutIdFromPspData(string $pspData)
     {
@@ -46,7 +46,7 @@ class Utils
             return false;
         }
         $query = parse_url($pspData, PHP_URL_QUERY);
-        if ($query === null) {
+        if ($query === null || $query === false) {
             return false;
         }
         parse_str($query, $output);
@@ -55,6 +55,7 @@ class Utils
         if ($returnMac === null || $hostedCheckoutId === null) {
             return false;
         }
+        assert(is_string($hostedCheckoutId));
 
         return $hostedCheckoutId;
     }

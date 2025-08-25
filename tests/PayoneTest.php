@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Dbp\Relay\MonoConnectorPayoneBundle\Payone\PaymentData;
 use Dbp\Relay\MonoConnectorPayoneBundle\Payone\Tools;
+use Dbp\Relay\MonoConnectorPayoneBundle\Service\Utils;
 use PHPUnit\Framework\TestCase;
 
 class PayoneTest extends TestCase
@@ -110,5 +111,17 @@ class PayoneTest extends TestCase
         // Make sure it also works for whole responses
         $output = Tools::obfuscatePaymentData(json_decode($body, true));
         $this->assertSame('433026**', $output['payment']['paymentOutput']['cardPaymentMethodSpecificOutput']['card']['bin']);
+    }
+
+    public function testExtractCheckoutIdFromPspDataReturnsHostedCheckoutId()
+    {
+        $result = Utils::extractCheckoutIdFromPspData('payone?RETURNMAC=abc123&hostedCheckoutId=checkout456');
+        $this->assertEquals('checkout456', $result);
+    }
+
+    public function testExtractCheckoutIdFromPspDataWithMissing()
+    {
+        $result = Utils::extractCheckoutIdFromPspData('payone');
+        $this->assertFalse($result);
     }
 }
