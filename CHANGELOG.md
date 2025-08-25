@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.5
+
+* relay-mono-connector-payone:webhook-info: add curl command for local webhook testing
+* Update online-payments/sdk-php to v7
+* a bit more logging and tests for webhooks
+
 ## v0.3.4
 
 * Add bundle config option to select the template variant for the hosted checkout page
