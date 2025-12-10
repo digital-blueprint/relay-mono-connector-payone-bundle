@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.6
+
+* Add support for Symfony 7
+
 ## v0.3.5
 
 * relay-mono-connector-payone:webhook-info: add curl command for local webhook testing
