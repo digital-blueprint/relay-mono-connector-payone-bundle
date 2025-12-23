@@ -19,7 +19,6 @@ class Configuration implements ConfigurationInterface
                     ->scalarNode('database_url')
                         ->info('The database DSN')
                         ->isRequired()
-                        ->defaultValue('%env(resolve:DATABASE_URL)%')
                     ->end()
                     ->arrayNode('payment_contracts')
                         ->info('Zero or more payment contracts. The "payment_contract" can be referenced in the "mono" config.')

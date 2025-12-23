@@ -8,7 +8,7 @@ Created via `./bin/console config:dump-reference DbpRelayMonoConnectorPayoneBund
 # Default configuration for "DbpRelayMonoConnectorPayoneBundle"
 dbp_relay_mono_connector_payone:
   # The database DSN
-  database_url:         '%env(resolve:DATABASE_URL)%' # Required
+  database_url:         ~ # Required
   # Zero or more payment contracts. The "payment_contract" can be referenced in the "mono" config.
   payment_contracts:
     # Prototype
