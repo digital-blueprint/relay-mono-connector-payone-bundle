@@ -20,10 +20,6 @@ services:
     autoconfigure: true
     public: true
 
-  Dbp\Relay\MonoConnectorPayoneBundle\Webhook\PayoneWebhookService:
-    autowire: true
-    autoconfigure: true
-
   Dbp\Relay\MonoConnectorPayoneBundle\Service\HealthCheck:
     autowire: true
     autoconfigure: true
