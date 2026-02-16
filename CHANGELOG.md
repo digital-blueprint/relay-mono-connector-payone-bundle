@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.7
+
+* Update to online-payments/sdk-php v8
+
 ## v0.3.6
 
 * Add support for Symfony 7
