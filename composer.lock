@@ -3297,22 +3297,23 @@
         },
         {
             "name": "online-payments/sdk-php",
-            "version": "8.1.0",
+            "version": "8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Online-Payments/sdk-php.git",
-                "reference": "42aef11e77e9689b208d50d296f0fc83c10cb018"
+                "reference": "e1215b9bf180de4eebbe5a6c4788b35cbe6fff09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/42aef11e77e9689b208d50d296f0fc83c10cb018",
-                "reference": "42aef11e77e9689b208d50d296f0fc83c10cb018",
+                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/e1215b9bf180de4eebbe5a6c4788b35cbe6fff09",
+                "reference": "e1215b9bf180de4eebbe5a6c4788b35cbe6fff09",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
                 "ext-json": "*",
                 "ext-mbstring": "*",
+                "ext-zlib": "*",
                 "php": ">=7.4",
                 "robtimus/multipart": "~1.0"
             },
@@ -3345,9 +3346,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Online-Payments/sdk-php/issues",
-                "source": "https://github.com/Online-Payments/sdk-php/tree/8.1.0"
+                "source": "https://github.com/Online-Payments/sdk-php/tree/8.2.0"
             },
-            "time": "2026-02-17T15:02:58+00:00"
+            "time": "2026-02-24T07:37:23+00:00"
         },
         {
             "name": "psr/cache",
