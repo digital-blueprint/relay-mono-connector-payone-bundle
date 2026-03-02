@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dbp\Relay\MonoConnectorPayoneBundle\DependencyInjection;
 
+use Dbp\Relay\CoreBundle\Doctrine\DateTimeImmutableUtcType;
 use Dbp\Relay\CoreBundle\Extension\ExtensionTrait;
 use Dbp\Relay\MonoConnectorPayoneBundle\Config\ConfigurationService;
 use Symfony\Component\Config\FileLocator;
@@ -31,6 +32,11 @@ class DbpRelayMonoConnectorPayoneExtension extends ConfigurableExtension impleme
 
         $definition = $container->getDefinition(ConfigurationService::class);
         $definition->addMethodCall('setConfig', [$mergedConfig]);
+
+        $typeDefinition = $container->getParameter('doctrine.dbal.connection_factory.types');
+        assert(is_array($typeDefinition));
+        $typeDefinition['relay_mono_connector_payone_datetime_immutable_utc'] = ['class' => DateTimeImmutableUtcType::class];
+        $container->setParameter('doctrine.dbal.connection_factory.types', $typeDefinition);
     }
 
     public function prepend(ContainerBuilder $container): void

@@ -23,7 +23,7 @@ class PaymentDataPersistence
     /**
      * @var \DateTimeInterface
      */
-    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[ORM\Column(type: 'relay_mono_connector_payone_datetime_immutable_utc', nullable: true)]
     private $createdAt;
 
     /**
