@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.8
+
+* Use UTC for the datetimes stored in the database instead of depending on the server's default timezone.
+
 ## v0.3.7
 
 * Update to online-payments/sdk-php v8
