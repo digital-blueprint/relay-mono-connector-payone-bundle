@@ -3312,16 +3312,16 @@
         },
         {
             "name": "online-payments/sdk-php",
-            "version": "9.5.0",
+            "version": "9.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Online-Payments/sdk-php.git",
-                "reference": "2f7bf324be4329f92eb1debd49d388d2d65155c9"
+                "reference": "10c33f56b737e4ddb7f01203107c76706c0a4503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/2f7bf324be4329f92eb1debd49d388d2d65155c9",
-                "reference": "2f7bf324be4329f92eb1debd49d388d2d65155c9",
+                "url": "https://api.github.com/repos/Online-Payments/sdk-php/zipball/10c33f56b737e4ddb7f01203107c76706c0a4503",
+                "reference": "10c33f56b737e4ddb7f01203107c76706c0a4503",
                 "shasum": ""
             },
             "require": {
@@ -3362,9 +3362,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Online-Payments/sdk-php/issues",
-                "source": "https://github.com/Online-Payments/sdk-php/tree/9.5.0"
+                "source": "https://github.com/Online-Payments/sdk-php/tree/9.6.0"
             },
-            "time": "2026-07-30T10:11:23+00:00"
+            "time": "2026-08-10T22:10:07+00:00"
         },
         {
             "name": "psr/cache",
