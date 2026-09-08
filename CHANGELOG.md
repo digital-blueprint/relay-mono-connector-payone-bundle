@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.3.10
+
+* Add support for online-payments/sdk-php v10
+
 ## v0.3.9
 
 * Add support for online-payments/sdk-php v9
